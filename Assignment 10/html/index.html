@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Assignment 10</title>
+        <link rel="stylesheet" href="/css/bootstrap.css"/>
+    </head>
+    <body>
+        <div class="container-fluid">
+            <h1>Assignment 10 Grader</h1>
+            <form method="post" action="/grade" encType="multipart/form-data" class="w-25">
+                    <div class="form-floating">
+                        <input class="form-control" required type="text" name="name" id="name" placeholder=" "/>
+                        <label class="form-label">Name</label>
+                        <br />
+                    </div>
+                    <div>
+                        <label class="form-label" for="parentClass">Select Parent Class:</label>
+                        <input class="form-control" required type="file" name="parentClass" id="parentClassInput" accept=".java" />
+                    </div>
+                    <div>
+                        <label class="form-label" for="childClass">Select Child Class:</label>
+                        <input class="form-control" required type="file" name="childClass" id="childClassInput" accept=".java" />
+                    </div>
+                    <div>
+                        <label class="form-label" for="runnerClass">Select Runner Class:</label>
+                        <input class="form-control" required type="file" name="runnerClass" id="runnerClassInput" accept=".java" />
+                    </div>
+                    <div>
+                        <br />
+                        <input type="submit" class="btn btn-primary" value="Submit"/>
+                    </div>
+            </form>
+            <div class="w-75" id="directions">
+                <h2>Directions</h2>
+                <p>Create a program that meets the following conditions:</p>
+                <ol>
+                    <li>Contains a method that uses recursion</li>
+                </ol>
+            </div>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,18 @@
+{
+    "name": "assignment9-grader",
+    "version": "1.0.0",
+    "description": "Grader for CSA assignment 9",
+    "main": "server.js",
+    "scripts": {
+        "start": "node server.js",
+        "clean": "rm -rf uploads/* && rm grades.json"
+    },
+    "author": "Charles Ludden",
+    "license": "MIT",
+    "dependencies": {
+        "express": "^4.18.2",
+        "multiparty": "4.2.3",
+        "bootstrap": "^5.2.3",
+        "@popperjs/core": "^2.11.6"
+    }
+}
