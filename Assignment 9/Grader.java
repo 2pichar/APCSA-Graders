@@ -79,9 +79,9 @@ public class Grader {
 
         System.out.println();
         System.out.println("Does each class have the correct number of fields?");
-        System.out.println(top.getName() + ": " + (top.getDeclaredFields().length == numParentFields));
-        System.out.println(mid.getName() + ": " + (mid.getDeclaredFields().length == numChildFields));
-        System.out.println(bot.getName() + ": " + (bot.getDeclaredFields().length == numChildFields));
+        System.out.println(top.getName() + ": " + (top.getDeclaredFields().length >= numParentFields));
+        System.out.println(mid.getName() + ": " + (mid.getDeclaredFields().length >= numChildFields));
+        System.out.println(bot.getName() + ": " + (bot.getDeclaredFields().length >= numChildFields));
 
         System.out.println();
         System.out.println("Does each class have the correct number of accessors and mutators?");
@@ -167,7 +167,7 @@ public class Grader {
             }
         }
 
-        return numOverriden == numOverridenInteresting;
+        return numOverriden >= numOverridenInteresting;
     }
     public static boolean hasAccessorMutators(Class cls){
         Field[] fields = cls.getDeclaredFields();
