@@ -11,6 +11,7 @@ public class Test {
         System.out.println("Test()");
     }
     public Test(int n){
+        this.n = this.m = n;
         System.out.println("Test(int)");
     }
     public void recursive(int n){

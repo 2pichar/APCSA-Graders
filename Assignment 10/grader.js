@@ -42,9 +42,13 @@ const parent_code = removeStrings(cleanComments(parent_file));
 const child_code = removeStrings(cleanComments(child_file));
 
 // Get all method names
-let runnerMethods = JSON.parse(runGrader_java('methods', runnerClass));
-let parentMethods = JSON.parse(runGrader_java('methods', parentClass));
-let childMethods = JSON.parse(runGrader_java('methods', childClass));
+const runnerMethods = JSON.parse(runGrader_java('methods', runnerClass));
+const parentMethods = JSON.parse(runGrader_java('methods', parentClass));
+const childMethods = JSON.parse(runGrader_java('methods', childClass));
+
+const runnerBlocks = getMethodBlocks(runner_code, runnerMethods);
+const parentBlocks = getMethodBlocks(parent_code, parentMethods);
+const childBlocks = getMethodBlocks(child_code, childMethods);
 
 // ========= Grading =========
 let grades = {};
@@ -55,44 +59,122 @@ grades = {...grades, ...java_grades};
 
 // Grade code for recursive function existence
 let recursive = checkRecursion();
-grades = {...grades, recursive};
+let arrayExists = checkArray();
+let twoDArrayExists = check2DArray();
+let arrayListExists = checkArrayList();
+grades = {...grades, recursive, arrayExists, twoDArrayExists, arrayListExists};
 console.log(grades);
 
 
+function checkArray(){
+  // Checks for the existence of a java array in any of the method declarations
+  let decRe = /(?<type>\w+)(?:(?:(?:(?:\[\] )|(?: \[\]))(?<name>\w+))|(?: (?<oname>\w+)\[\])) = (?:(?:new \w+\[\d+\])|(?:\{.+\}))/;
+  let useRE = "for\\({1} \\w+ : {2}\\)\\{(?:.|\\s)+\\}";
+  let arrayName = "";
+  // find name of java array in method declaration
+  for(let name of runnerMethods){
+    let match = decRe.exec(runnerBlocks[name]);
+    if (match){
+      arrayName = match.groups.name || match.groups.oname;
+      let useRegex = new RegExp(String.format(useRE, match.groups.type, arrayName));
+      if (useRegex.test(runnerBlocks[name])){
+        return true;
+      }
+    }
+  }
+  for(let name of parentMethods){
+    let match = decRe.exec(parentBlocks[name]);
+    if (match){
+      arrayName = match.groups.name || match.groups.oname;
+      let useRegex = new RegExp(String.format(useRE, match.groups.type, arrayName));
+      if (useRegex.test(parentBlocks[name])){
+        return true;
+      }
+    }
+  }
+  for(let name of childMethods){
+    let match = decRe.exec(childBlocks[name]);
+    if (match){
+      arrayName = match.groups.name || match.groups.oname;
+      let useRegex = new RegExp(String.format(useRE, match.groups.type, arrayName));
+      if (useRegex.test(childBlocks[name])){
+        return true;
+      }
+    }
+  }
+
+  return false;
+}
+
+function check2DArray(){ // TODO: finish
+  // Checks for the existence of a java 2D array (type[][]) in any of the method declarations
+  let decRe = /(?<type>\w+)(?:(?:(?:(?:\[\]\[\] )|(?: \[\]\[\]))(?<name>\w+))|(?: (?<oname>\w+)\[\]\[\])) = (?:(?:new \w+\[\d+\]\[\d+\])|(?:\{.+\}))/;
+  let useFinder = "{1}\\[\\d+\\]\\[\\d+\\]";
+  let arrayName = "";
+  // find name of java array in method declaration
+  for(let name of runnerMethods){
+    let match = decRe.exec(runnerBlocks[name]);
+    if (match){
+      arrayName = match.groups.name || match.groups.oname;
+      let useRegex = new RegExp(String.format(useFinder, match.groups.type, arrayName));
+      if (useRegex.test(runnerBlocks[name])){
+        return true;
+      }
+    }
+  }
+  for(let name of parentMethods){
+    let match = decRe.exec(parentBlocks[name]);
+    if (match){
+      arrayName = match.groups.name || match.groups.oname;
+      let useRegex = new RegExp(String.format(useFinder, match.groups.type, arrayName));
+      if (useRegex.test(parentBlocks[name])){
+        return true;
+      }
+    }
+  }
+  for(let name of childMethods){
+    let match = decRe.exec(childBlocks[name]);
+    if (match){
+      arrayName = match.groups.name || match.groups.oname;
+      let useRegex = new RegExp(String.format(useFinder, match.groups.type, arrayName));
+      if (useRegex.test(childBlocks[name])){
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
+function checkArrayList(){ // TODO: finish
+  // Checks for the existence of a java ArrayList in any of the method declarations
+}
 
 function checkRecursion(){
-    let runnerBlocks = getMethodBlocks(runner_code, runnerMethods);
-    let parentBlocks = getMethodBlocks(parent_code, parentMethods);
-    let childBlocks = getMethodBlocks(child_code, childMethods);
-
-    for(let name of runnerMethods){
-      let blockStartInd = runnerBlocks[name].indexOf('{');
-      let re = new RegExp(`${name}\\(.*?\\)`, 'g');
-      re.lastIndex = blockStartInd;
-      if (re.test(runnerBlocks[name])){
-        console.log(name);
-        return true;
-      }
+  for(let name of runnerMethods){
+    let blockStartInd = runnerBlocks[name].indexOf('{');
+    let re = new RegExp(`${name}\\(.*?\\)`, 'g');
+    re.lastIndex = blockStartInd;
+    if (re.test(runnerBlocks[name])){
+      return true;
     }
-    for(let name of parentMethods){
-      let blockStartInd = parentBlocks[name].indexOf('{');
-      let re = new RegExp(`${name}\\(.*?\\)`, 'g');
-      re.lastIndex = blockStartInd;
-      if (re.test(parentBlocks[name])){
-        console.log(name);
-        return true;
-      }
+  }
+  for(let name of parentMethods){
+    let blockStartInd = parentBlocks[name].indexOf('{');
+    let re = new RegExp(`${name}\\(.*?\\)`, 'g');
+    re.lastIndex = blockStartInd;
+    if (re.test(parentBlocks[name])){
+      return true;
     }
-    for(let name of childMethods){
-      let blockStartInd = childBlocks[name].indexOf('{');
-      let re = new RegExp(`${name}\\(.*?\\)`, 'g');
-      re.lastIndex = blockStartInd;
-      if (re.test(childBlocks[name])){
-        console.log(name);
-        return true;
-      }
+  }
+  for(let name of childMethods){
+    let blockStartInd = childBlocks[name].indexOf('{');
+    let re = new RegExp(`${name}\\(.*?\\)`, 'g');
+    re.lastIndex = blockStartInd;
+    if (re.test(childBlocks[name])){
+      return true;
     }
-    return false;
+  }
+  return false;
 }
 
 function cleanComments(code){

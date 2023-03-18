@@ -11,10 +11,18 @@ public class Child extends Test {
     }
     public Child(int n){
         super(n);
+        this.n = n;
+        x = 1;
         System.out.println("Child(int)");
     }
+    public Child(int n, int x){
+        super(n);
+        this.n = n;
+        this.x = x;
+        System.out.println("Child(int, int)");
+    }
     public void other(){
-        int[][] arr = new int[3][2];
+        int[][] arr = new int[n][x];
         String[] arr2 = new String[3];
         ArrayList<String> arr3 = new ArrayList<String>();
 
@@ -30,6 +38,10 @@ public class Child extends Test {
 
         for(int i = 0; i < 10; i++){
             arr3.add("Hello (A" + i + ")");
+        }
+        
+        for(String a : arr2){
+            System.out.println(a);
         }
     }
     public void method(){
