@@ -8,6 +8,7 @@ class Util {
             return null;
         }
         final T t = arr.get(0);
+        @SuppressWarnings("unchecked")
         final T[] res = (T[]) Array.newInstance(t.getClass(), arr.size());
         for (int i = 0; i < arr.size(); i++) {
             res[i] = arr.get(i);
@@ -69,7 +70,7 @@ public class Grader {
         String cmd = args[0];
         Class<?> c1 = Class.forName("assignment10." + args[1]);
         Class<?> c2;
-        c2 = c3 = null;
+        c2 = null;
         if(args.length > 2){
             c2 = Class.forName("assignment10." + args[2]);
         }
