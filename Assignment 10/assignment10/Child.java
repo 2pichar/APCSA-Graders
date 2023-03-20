@@ -22,7 +22,7 @@ public class Child extends Test {
         System.out.println("Child(int, int)");
     }
     public void other(){
-        int[][] arr = new int[n][x];
+        int[][] arr = new int[4][4];
         String[] arr2 = new String[3];
         ArrayList<String> arr3 = new ArrayList<String>();
 
@@ -36,8 +36,9 @@ public class Child extends Test {
             arr2[i] = "Hello (" + i + ")";
         }
 
-        for(int i = 0; i < 10; i++){
+        for(int i = 0; i < arr3.size(); i++){
             arr3.add("Hello (A" + i + ")");
+            System.out.println(arr3.get(i));
         }
         
         for(String a : arr2){
