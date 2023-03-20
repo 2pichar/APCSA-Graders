@@ -105,3 +105,16 @@ dist
 
 # java class files
 *.class
+
+# uploaded files
+uploads/
+
+# grades file
+grades.json
+
+# error logs
+errors.json
+
+# lock files
+package-lock.json
+yarn.lock
