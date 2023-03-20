@@ -68,13 +68,10 @@ public class Grader {
         
         String cmd = args[0];
         Class<?> c1 = Class.forName("assignment10." + args[1]);
-        Class<?> c2, c3;
+        Class<?> c2;
         c2 = c3 = null;
         if(args.length > 2){
             c2 = Class.forName("assignment10." + args[2]);
-            if(args.length > 3){
-                c3 = Class.forName("assignment10." + args[3]);
-            }
         }
 
         if(cmd.equals("inherit")){
@@ -92,8 +89,6 @@ public class Grader {
             // Grade the Inheritance, Constructors, Overriding, & Unique Methods sections
             Class parent = c1;
             Class child = c2;
-            Class runner = c3;
-
             // Inheritance
             boolean inherits = child.getSuperclass().equals(parent);
 
@@ -120,20 +115,6 @@ public class Grader {
         }
         System.out.print(String.format("\"%s\"]", arr[arr.length - 1].toString()));
     }
-/*
-    public static boolean hasObjMethods(Class cls){
-        Method[] arr = cls.getDeclaredMethods();
-        boolean hasEquals = false;
-        boolean hasToString = false;
-        for(Method m : arr){
-            if(m.getName().equals("toString")){
-                hasToString = true;
-            } else if(m.getName().equals("equals")){
-                hasEquals = true;
-            }
-        }
-        return hasEquals && hasToString;
-    }*/
     public static boolean hasUniqueVariables(Class cls){
         Field[] fields = cls.getDeclaredFields();
         Field[] inherited = Util.filter_out(cls.getFields(), cls);
@@ -184,24 +165,5 @@ public class Grader {
         }
 
         return numOverriden >= 1;
-    }/*
-    public static boolean hasAccessorMutators(Class cls){
-        Field[] fields = cls.getDeclaredFields();
-        Method[] methods = cls.getDeclaredMethods();
-        int numAccessorMutators = 0;
-        methodsIter: for(int i = 0; i < methods.length; i++){
-            String name = methods[i].getName();
-            if (name.startsWith("set") || name.startsWith("get")){
-                numAccessorMutators++;
-                continue methodsIter;
-            }
-            for (int j = 0; j < fields.length; j++){
-                if(name.contains(fields[j].getName())){
-                    numAccessorMutators++;
-                    continue methodsIter;
-                }
-            }
-        }
-        return numAccessorMutators >= fields.length * 2;
-    }*/
+    }
 }

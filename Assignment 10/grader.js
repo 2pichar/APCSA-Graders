@@ -106,10 +106,11 @@ function checkArray(){
   return false;
 }
 
-function check2DArray(){ // TODO: finish
+function check2DArray(){ // MAYBE: check for array access within for loop (useMatchingBracket)
   // Checks for the existence of a java 2D array (type[][]) in any of the method declarations
-  let decRe = /(?<type>\w+)(?:(?:(?:(?:\[\]\[\] )|(?: \[\]\[\]))(?<name>\w+))|(?: (?<oname>\w+)\[\]\[\])) = (?:(?:new \w+\[\d+\]\[\d+\])|(?:\{.+\}))/;
-  let useFinder = "{1}\\[\\d+\\]\\[\\d+\\]";
+  let decRe = /(?<type>\w+)(?:(?:(?:(?:\[\]\[\] )|(?: \[\]\[\]))(?<name>\w+))|(?: (?<oname>\w+)\[\]\[\])) = (?:(?:new \w+\[\w+\]\[\w+\])|(?:\{.+\}))/;
+  let useFinder = "{1}\\[\\w+\\]\\[\\w+\\]";
+  let travFinder = "(?:for\\({1}\\[\\] \\w+ : {2}\\)\\{(?:.|\\s)+\\})|(?:for\\(int (\\w+) = \\d+;\\s*\\1 (?:<|>)=? {2}.length;\\s*\\1.+\\)\\{(?:.|\\s)+\\})";
   let arrayName = "";
   // find name of java array in method declaration
   for(let name of runnerMethods){
@@ -117,7 +118,8 @@ function check2DArray(){ // TODO: finish
     if (match){
       arrayName = match.groups.name || match.groups.oname;
       let useRegex = new RegExp(String.format(useFinder, match.groups.type, arrayName));
-      if (useRegex.test(runnerBlocks[name])){
+      let travRegex = new RegExp(String.format(travFinder, match.groups.type, arrayName));
+      if (useRegex.test(runnerBlocks[name]) && travRegex.test(runnerBlocks[name])){
         return true;
       }
     }
@@ -127,7 +129,8 @@ function check2DArray(){ // TODO: finish
     if (match){
       arrayName = match.groups.name || match.groups.oname;
       let useRegex = new RegExp(String.format(useFinder, match.groups.type, arrayName));
-      if (useRegex.test(parentBlocks[name])){
+      let travRegex = new RegExp(String.format(travFinder, match.groups.type, arrayName));
+      if (useRegex.test(parentBlocks[name]) && travRegex.test(parentBlocks[name])){
         return true;
       }
     }
@@ -136,8 +139,9 @@ function check2DArray(){ // TODO: finish
     let match = decRe.exec(childBlocks[name]);
     if (match){
       arrayName = match.groups.name || match.groups.oname;
-      let useRegex = new RegExp(String.format(useFinder, match.groups.type, arrayName));
-      if (useRegex.test(childBlocks[name])){
+      let useRegex = new RegExp(String.format(useFinder, arrayName));
+      let travRegex = new RegExp(String.format(travFinder, match.groups.type, arrayName));
+      if (useRegex.test(childBlocks[name]) && travRegex.test(childBlocks[name])){
         return true;
       }
     }
@@ -145,8 +149,48 @@ function check2DArray(){ // TODO: finish
   return false;
 }
 
-function checkArrayList(){ // TODO: finish
+function checkArrayList(){
   // Checks for the existence of a java ArrayList in any of the method declarations
+  let decRe = /(?<type>ArrayList\<\w+\>)(?: (?<name>\w+)) = new \k<type>\(\);/;
+  let useFinder = "{1}\\.get\\(\\w+\\)";
+  // check for ArrayList traversal in a normal for loop
+  let travFinder = "for\\(int (\\w+) = \\d+; \\1 (?:<|>)=? {2}.size\\(\\); \\1.+\\)\\{(?:.|\\s)+\\}";
+  let arrayName = "";
+  // find name of ArrayList in method declaration
+  for(let name of runnerMethods){
+    let match = decRe.exec(runnerBlocks[name]);
+    if (match){
+      arrayName = match.groups.name;
+      let useRegex = new RegExp(String.format(useFinder, match.groups.type, arrayName));
+      let travRegex = new RegExp(String.format(travFinder, match.groups.type, arrayName));
+      if (useRegex.test(runnerBlocks[name]) && travRegex.test(runnerBlocks[name])){
+        return true;
+      }
+    }
+  }
+  for(let name of parentMethods){
+    let match = decRe.exec(parentBlocks[name]);
+    if (match){
+      arrayName = match.groups.name;
+      let useRegex = new RegExp(String.format(useFinder, match.groups.type, arrayName));
+      let travRegex = new RegExp(String.format(travFinder, match.groups.type, arrayName));
+      if (useRegex.test(parentBlocks[name]) && travRegex.test(parentBlocks[name])){
+        return true;
+      }
+    }
+  }
+  for(let name of childMethods){
+    let match = decRe.exec(childBlocks[name]);
+    if (match){
+      arrayName = match.groups.name;
+      let useRegex = new RegExp(String.format(useFinder, arrayName));
+      let travRegex = new RegExp(String.format(travFinder, match.groups.type, arrayName));
+      if (useRegex.test(childBlocks[name]) && travRegex.test(childBlocks[name])){
+        return true;
+      }
+    }
+  }
+  return false;
 }
 
 function checkRecursion(){
