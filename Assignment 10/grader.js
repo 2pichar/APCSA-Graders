@@ -63,7 +63,7 @@ let arrayExists = checkArray();
 let twoDArrayExists = check2DArray();
 let arrayListExists = checkArrayList();
 grades = {...grades, recursive, arrayExists, twoDArrayExists, arrayListExists};
-console.log(grades);
+console.log(JSON.stringify(grades));
 
 
 function checkArray(){
