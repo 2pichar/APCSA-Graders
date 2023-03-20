@@ -8,36 +8,56 @@
     </head>
     <body>
         <div class="container-fluid">
-            <h1>Assignment 10 Grader</h1>
-            <form method="post" action="/grade" encType="multipart/form-data" class="w-25">
-                    <div class="form-floating">
-                        <input class="form-control" required type="text" name="name" id="name" placeholder=" "/>
-                        <label class="form-label">Name</label>
-                        <br />
-                    </div>
-                    <div>
-                        <label class="form-label" for="parentClass">Select Parent Class:</label>
-                        <input class="form-control" required type="file" name="parentClass" id="parentClassInput" accept=".java" />
-                    </div>
-                    <div>
-                        <label class="form-label" for="childClass">Select Child Class:</label>
-                        <input class="form-control" required type="file" name="childClass" id="childClassInput" accept=".java" />
-                    </div>
-                    <div>
-                        <label class="form-label" for="runnerClass">Select Runner Class:</label>
-                        <input class="form-control" required type="file" name="runnerClass" id="runnerClassInput" accept=".java" />
-                    </div>
-                    <div>
-                        <br />
-                        <input type="submit" class="btn btn-primary" value="Submit"/>
-                    </div>
-            </form>
-            <div class="w-75" id="directions">
-                <h2>Directions</h2>
-                <p>Create a program that meets the following conditions:</p>
-                <ol>
-                    <li>Contains a method that uses recursion</li>
-                </ol>
+            <div class="row">
+                <div class="col">
+                    <h1>Assignment 10 Grader</h1>
+                    <form method="post" action="/grade" encType="multipart/form-data">
+                            <div class="form-floating">
+                                <input class="form-control" required type="text" name="name" id="name" placeholder=" "/>
+                                <label class="form-label">Name</label>
+                                <br />
+                            </div>
+                            <div>
+                                <label class="form-label" for="parentClass">Select Parent Class:</label>
+                                <input class="form-control" required type="file" name="parentClass" id="parentClassInput" accept=".java" />
+                            </div>
+                            <div>
+                                <label class="form-label" for="childClass">Select Child Class:</label>
+                                <input class="form-control" required type="file" name="childClass" id="childClassInput" accept=".java" />
+                            </div>
+                            <div>
+                                <label class="form-label" for="runnerClass">Select Runner Class:</label>
+                                <input class="form-control" required type="file" name="runnerClass" id="runnerClassInput" accept=".java" />
+                            </div>
+                            <div>
+                                <br />
+                                <input type="checkbox" class="form-check-input" name="bonus" id="bonus" value="true"/>
+                                <label class="form-check-label" for="bonus">I implemented the bonus sorting and searching method.</label>
+                                <br />
+                                <br />
+                                <input type="submit" class="btn btn-primary" value="Submit"/>
+                            </div>
+                    </form>
+                </div>
+                <div class="col" id="directions">
+                    <h2>Directions</h2>
+                    <p>Create a program that meets the following conditions:</p>
+                    <ol>
+                        <li>A method that takes in one parameter</li>
+                        <li>1 Class and 1 Subclass. Each should include:</li>
+                        <ol>
+                            <li>2 unique variables</li>
+                            <li>1 unique method</li>
+                            <li>1 overridden method</li>
+                            <li>2 constructors</li>
+                        </ol>
+                        <li>An Array that is traversed with a for-each (advanced for) loop</li>
+                        <li>An ArrayList that is traversed with a standard for loop</li>
+                        <li>A 2D Array that is traversed however you like</li>
+                        <li>A recursive method</li>
+                    </ol>
+                    <h5>Bonus: Add a sorting method to get one of your arrays in order and use binary search to get the index of an item.</h4>
+                </div>
             </div>
         </div>
     </body>
