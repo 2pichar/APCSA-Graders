@@ -118,3 +118,6 @@ errors.json
 # lock files
 package-lock.json
 yarn.lock
+
+# usage logs
+usage.json

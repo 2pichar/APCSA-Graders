@@ -15,6 +15,7 @@ let currentGrades = JSON.parse(fs.readFileSync(__dirname + '/grades.json', 'utf8
 const gradeResTemplate = fs.readFileSync(__dirname + '/html/grading_res.html', 'utf8');
 const gradesSummaryTemplate = fs.readFileSync(__dirname + '/html/grades_summary.html', 'utf8');
 var errors = [];
+var usageLog = {};
 
 function logError(err){
     process.send({type: 'error', data: err.toString()});
@@ -67,6 +68,13 @@ function update_grades_json(){
 if(cluster.isPrimary){
     var int = setInterval(update_grades_json, 60 * 60 * 1000);
 }
+
+app.use((req, res, next) => {
+    // log the request
+    process.send({type: 'request', data: process.pid});
+    next();
+});
+
 app.on('error', (err) => {
     logError(err);
 });
@@ -166,6 +174,13 @@ if (cluster.isPrimary){
             }
         } else if(msg.type == 'error'){
             errors.push(msg.data);
+        } else if (msg.type == 'request'){
+            let pid = msg.data;
+            if (pid in usageLog){
+                usageLog[pid]++;
+            } else {
+                usageLog[pid] = 1;
+            }
         }
     });
 } else {
@@ -183,6 +198,7 @@ function __onExit(){
         clearInterval(int);
         fs.writeFileSync(__dirname + '/errors.json', JSON.stringify(errors, '', 2)); 
         fs.writeFileSync(__dirname + '/grades.json', JSON.stringify(currentGrades, '', 2));
+        fs.writeFileSync(__dirname + '/usage.json', JSON.stringify(usageLog, '', 2));
     } else {
         server.close();
     }
