@@ -153,7 +153,7 @@ if (cluster.isPrimary){
     for(let i = 0; i < numWorkers; i++){
         workers.push(cluster.fork());
     }
-    cluster.on('message', (worker, msg) => {
+    cluster.on('message', (w, msg) => {
         if(msg.type == 'grade'){
             let grade_obj = msg.data.val;
             let total_pts = 0;
@@ -161,7 +161,9 @@ if (cluster.isPrimary){
                 total_pts += grade_obj[key] && 1 || 0;
             }
             currentGrades[msg.data.name] = {date: msg.data.date, tests: msg.data.val, grade: total_pts, bonus: msg.data.didBonus};
-            worker.send({type: 'grades', data: currentGrades});
+            for (let worker of workers){
+                worker.send({type: 'grades', data: currentGrades});
+            }
         } else if(msg.type == 'error'){
             errors.push(msg.data);
         }
