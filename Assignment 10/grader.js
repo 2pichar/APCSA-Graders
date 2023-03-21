@@ -50,6 +50,14 @@ const runnerBlocks = getMethodBlocks(runner_code, runnerMethods);
 const parentBlocks = getMethodBlocks(parent_code, parentMethods);
 const childBlocks = getMethodBlocks(child_code, childMethods);
 
+const runnerFields = JSON.parse(runGrader_java('fields', runnerClass));
+const parentFields = JSON.parse(runGrader_java('fields', parentClass));
+const childFields = JSON.parse(runGrader_java('fields', childClass));
+
+const runnerArrayFields = getArrayFields(runnerFields);
+const parentArrayFields = getArrayFields(parentFields);
+const childArrayFields = getArrayFields(childFields);
+
 // ========= Grading =========
 let grades = {};
 // Grade code with java grader
@@ -97,6 +105,32 @@ function checkArray(){
     if (match){
       arrayName = match.groups.name || match.groups.oname;
       let useRe = new RegExp(String.format(useReStr, match.groups.type, arrayName));
+      if (useRe.test(childBlocks[name])){
+        return true;
+      }
+    }
+  }
+
+  // check for use of array fields in methods
+  for(let name of runnerMethods){
+    for(let field of runnerArrayFields.array){
+      let useRe = new RegExp(String.format(useReStr, field.type, field.name));
+      if (useRe.test(runnerBlocks[name])){
+        return true;
+      }
+    }
+  }
+  for(let name of parentMethods){
+    for(let field of parentArrayFields.array){
+      let useRe = new RegExp(String.format(useReStr, field.type, field.name));
+      if (useRe.test(parentBlocks[name])){
+        return true;
+      }
+    }
+  }
+  for(let name of childMethods){
+    for(let field of childArrayFields.array){
+      let useRe = new RegExp(String.format(useReStr, field.type, field.name));
       if (useRe.test(childBlocks[name])){
         return true;
       }
@@ -221,6 +255,23 @@ function checkRecursion(){
     }
   }
   return false;
+}
+
+function getArrayFields(fieldsArr){
+  // returns an array of all of the array, 2d array, and arrayList fields using the array of fields
+  let arrayFields = [];
+  let array2dFields = [];
+  let arrayListFields = [];
+  for(let field of fieldsArr){
+    if (field.includes('[][]')){
+      array2dFields.push({type: field.split('[][]')[0].trim(), name: field.split('[][]')[1].trim()});
+    } else if (field.includes('[]')){
+      arrayFields.push({type: field.split('[]')[0].trim(), name: field.split('[]')[1].trim()});
+    } else if (field.includes('ArrayList')){
+      arrayListFields.push({type: field.split('ArrayList')[1].trim(), name: field.split('ArrayList')[0].trim()});
+    }
+  }
+  return {array: arrayFields, array2d: array2dFields, arrayList: arrayListFields};
 }
 
 function cleanComments(code){

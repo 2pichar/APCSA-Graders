@@ -70,9 +70,13 @@ public class Grader {
         String cmd = args[0];
         Class<?> c1 = Class.forName("assignment10." + args[1]);
         Class<?> c2;
-        c2 = null;
+        Class<?> c3;
+        c2 = c3 = null;
         if(args.length > 2){
             c2 = Class.forName("assignment10." + args[2]);
+            if(args.length > 3){
+                c3 = Class.forName("assignment10." + args[3]);
+            }
         }
 
         if(cmd.equals("inherit")){
@@ -86,10 +90,18 @@ public class Grader {
             printJSONArr(names);
         } else if (cmd.equals("constructors")){
             System.out.print(hasConstructors(c1));
+        } else if (cmd.equals("fields")){
+            Field[] fields = c1.getDeclaredFields();
+            String[] names = new String[fields.length];
+            for(int i = 0; i < fields.length; i++){
+                names[i] = String.format("%s %s", fields[i].getType().getSimpleName(), fields[i].getName());
+            }
+            printJSONArr(names);
         } else if(cmd.equals("grade")){
             // Grade the Inheritance, Constructors, Overriding, & Unique Methods sections
             Class parent = c1;
             Class child = c2;
+            Class runner = c3;
             // Inheritance
             boolean inherits = child.getSuperclass().equals(parent);
 
@@ -102,14 +114,21 @@ public class Grader {
             // Unique Methods
             boolean hasUniqueMethods = hasUniqueMethods(child);
 
+            // Parameterized Methods
+            boolean hasMethodParam = hasMethodParam(parent) || hasMethodParam(child) || hasMethodParam(runner);
+
             // Unique Variables
             boolean hasUniqueVariables = hasUniqueVariables(parent) && hasUniqueVariables(child);
 
-            System.out.println(String.format("{\"inherits\":%s,\"constructors\":%s,\"overrides\":%s,\"uniqueMethods\":%s,\"uniqueVars\":%s}", inherits, hasConstructors, overrides, hasUniqueMethods, hasUniqueVariables));
+            System.out.println(String.format("{\"inherits\":%s,\"constructors\":%s,\"parameterized\":%s,\"overrides\":%s,\"uniqueMethods\":%s,\"uniqueVars\":%s}", inherits, hasConstructors, hasMethodParam, overrides, hasUniqueMethods, hasUniqueVariables));
         }
     }
 
     public static <T> void printJSONArr(T[] arr){
+        if(arr == null || arr.length == 0){
+            System.out.print("[]");
+            return;
+        }
         System.out.print("[");
         for(int i = 0; i < arr.length - 1; i++){
             System.out.print(String.format("\"%s\",", arr[i].toString()));
@@ -129,7 +148,7 @@ public class Grader {
         return numUnique >= 2;
     }
     public static boolean hasConstructors(Class cls){
-        Constructor[] arr = cls.getConstructors();
+        Constructor[] arr = cls.getDeclaredConstructors();
         boolean hasDefault = false;
         boolean hasParam = false;
         for(Constructor c : arr){
@@ -152,6 +171,15 @@ public class Grader {
             numUnique++;
         }
         return numUnique >= 1;
+    }
+    public static boolean hasMethodParam(Class cls){
+        Method[] methods = cls.getDeclaredMethods();
+        for(Method mthd : methods){
+            if(mthd.getParameterCount() > 0){
+                return true;
+            }
+        }
+        return false;
     }
     public static boolean overridesMethods(Class sub, Class sup){
         Method[] inheritedMethods = Util.filter_out(sup.getMethods(), obj_cls);

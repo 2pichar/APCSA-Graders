@@ -52,14 +52,13 @@ function build_summary_html(){
     let fmt = "<tr><td>{1}</td><td>{2}</td><td>{3}</td><td>{4}</td><td>{5}%</td></tr>";
     for(let name of Object.keys(currentGrades)){
         let obj = currentGrades[name];
-        let s = String.format(fmt, obj.date, name, obj.bonus ? "✅" : "❌", obj.grade, obj.grade / 9 * 100);
-        console.log(s);
+        let s = String.format(fmt, obj.date, name, obj.bonus ? "✅" : "❌", obj.grade, Math.round((obj.grade / 10 * 100) * 100) / 100);
         str += s;
     }
     return String.format(gradesSummaryTemplate, str);
 }
 function build_res_html(grade, total){
-    return String.format(gradeResTemplate, ...grade, total, total/9 * 100);
+    return String.format(gradeResTemplate, ...grade, total, Math.round((total/10 * 100) * 100)/100);
 }
 function update_grades_json(){
     fs.writeFileSync(__dirname + '/grades.json', JSON.stringify(currentGrades), 'utf8');
