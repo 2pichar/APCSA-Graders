@@ -69,15 +69,15 @@ console.log(JSON.stringify(grades));
 function checkArray(){
   // Checks for the existence of a java array in any of the method declarations
   let decRe = /(?<type>\w+)(?:(?:(?:(?:\[\] )|(?: \[\]))(?<name>\w+))|(?: (?<oname>\w+)\[\])) = (?:(?:new \w+\[\d+\])|(?:\{.+\}))/;
-  let useRE = "for\\({1} \\w+ : {2}\\)\\{(?:.|\\s)+\\}";
+  let useReStr = "for\\({1} (\\w+) : {2}\\)\\{(?:.|\\s)+\\1(?:.|\\s)+\\}";
   let arrayName = "";
   // find name of java array in method declaration
   for(let name of runnerMethods){
     let match = decRe.exec(runnerBlocks[name]);
     if (match){
       arrayName = match.groups.name || match.groups.oname;
-      let useRegex = new RegExp(String.format(useRE, match.groups.type, arrayName));
-      if (useRegex.test(runnerBlocks[name])){
+      let useRe = new RegExp(String.format(useReStr, match.groups.type, arrayName));
+      if (useRe.test(runnerBlocks[name])){
         return true;
       }
     }
@@ -86,8 +86,8 @@ function checkArray(){
     let match = decRe.exec(parentBlocks[name]);
     if (match){
       arrayName = match.groups.name || match.groups.oname;
-      let useRegex = new RegExp(String.format(useRE, match.groups.type, arrayName));
-      if (useRegex.test(parentBlocks[name])){
+      let useRe = new RegExp(String.format(useReStr, match.groups.type, arrayName));
+      if (useRe.test(parentBlocks[name])){
         return true;
       }
     }
@@ -96,8 +96,8 @@ function checkArray(){
     let match = decRe.exec(childBlocks[name]);
     if (match){
       arrayName = match.groups.name || match.groups.oname;
-      let useRegex = new RegExp(String.format(useRE, match.groups.type, arrayName));
-      if (useRegex.test(childBlocks[name])){
+      let useRe = new RegExp(String.format(useReStr, match.groups.type, arrayName));
+      if (useRe.test(childBlocks[name])){
         return true;
       }
     }
@@ -106,7 +106,9 @@ function checkArray(){
   return false;
 }
 
-function check2DArray(){ // MAYBE: check for array access within for loop (useMatchingBracket)
+function check2DArray(){
+  /*let foreachFinder = "for\\({1}\\[\\] (\\w+) : {2}\\)\\{(?:.|\\s)+for\\({1} (\\w+) : \\1\\)\\{(?:.|\\s)+\\2(?:.|\\s)+\\}(?:.|\\s)+\\}"
+  let forFinder = "for\\(int (\\w+) = \\d+;\\s*\\1 (?:<|>)=? {2}.length;\\s*\\1.+\\)\\{(?:.|\\s)+\\}";*/
   // Checks for the existence of a java 2D array (type[][]) in any of the method declarations
   let decRe = /(?<type>\w+)(?:(?:(?:(?:\[\]\[\] )|(?: \[\]\[\]))(?<name>\w+))|(?: (?<oname>\w+)\[\]\[\])) = (?:(?:new \w+\[\w+\]\[\w+\])|(?:\{.+\}))/;
   let useFinder = "{1}\\[\\w+\\]\\[\\w+\\]";
