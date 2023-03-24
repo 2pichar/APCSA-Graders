@@ -76,7 +76,7 @@ console.log(JSON.stringify(grades));
 
 function checkArray(){
   // Checks for the existence of a java array in any of the method declarations
-  let decRe = /(?<type>\w+)(?:(?:(?:(?:\[\] )|(?: \[\]))(?<name>\w+))|(?: (?<oname>\w+)\[\])) = (?:(?:new \w+\[\d+\])|(?:\{.+\}))/;
+  let decRe = /(?<type>\w+)(?:(?:(?:(?:\[\] )|(?: \[\]))(?<name>\w+))|(?: (?<oname>\w+)\[\]))(?: *= *(?:(?:new \w+\[\w+\])|(?:\{.+\})))|(?:;(?:.|\s)*(?:(?:\k<name>|\k<oname>) *= *(?:(?:new \w+\[\w+\])|(?:\{.+\}))))/;
   let useReStr = "for\\({1} (\\w+) : {2}\\)\\{(?:.|\\s)+\\1(?:.|\\s)+\\}";
   let arrayName = "";
   // find name of java array in method declaration
@@ -144,7 +144,7 @@ function check2DArray(){
   /*let foreachFinder = "for\\({1}\\[\\] (\\w+) : {2}\\)\\{(?:.|\\s)+for\\({1} (\\w+) : \\1\\)\\{(?:.|\\s)+\\2(?:.|\\s)+\\}(?:.|\\s)+\\}"
   let forFinder = "for\\(int (\\w+) = \\d+;\\s*\\1 (?:<|>)=? {2}.length;\\s*\\1.+\\)\\{(?:.|\\s)+\\}";*/
   // Checks for the existence of a java 2D array (type[][]) in any of the method declarations
-  let decRe = /(?<type>\w+)(?:(?:(?:(?:\[\]\[\] )|(?: \[\]\[\]))(?<name>\w+))|(?: (?<oname>\w+)\[\]\[\])) = (?:(?:new \w+\[\w+\]\[\w+\])|(?:\{.+\}))/;
+  let decRe = /(?<type>\w+)(?:(?:(?:(?:\[\]\[\] )|(?: \[\]\[\]))(?<name>\w+))|(?: (?<oname>\w+)\[\]\[\]))(?: *= *(?:(?:new \w+\[\w+\]\[\w+\])|(?:\{.+\})))|(?:;(?:.|\s)*(?:(?:\k<name>|\k<oname>) *= *(?:(?:new \w+\[\w+\]\[\w+\])|(?:\{.+\}))))/;
   let useFinder = "{1}\\[\\w+\\]\\[\\w+\\]";
   let travFinder = "(?:for\\({1}\\[\\] \\w+ : {2}\\)\\{(?:.|\\s)+\\})|(?:for\\(int (\\w+) = \\d+;\\s*\\1 (?:<|>)=? {2}.length;\\s*\\1.+\\)\\{(?:.|\\s)+\\})";
   let arrayName = "";
@@ -187,7 +187,7 @@ function check2DArray(){
 
 function checkArrayList(){
   // Checks for the existence of a java ArrayList in any of the method declarations
-  let decRe = /(?<type>ArrayList\<\w+\>)(?: (?<name>\w+)) = new \k<type>\(\);/;
+  let decRe = /(?<type>ArrayList\<\w+\>)(?: (?<name>\w+))(?:(?: *= *new \k<type>\(\))|(?:;(?:.|\s)+\k<name> *= *new \k<type>\(\)));/;
   let useFinder = "{1}\\.get\\(\\w+\\)";
   // check for ArrayList traversal in a normal for loop
   let travFinder = "for\\(int (\\w+) = \\d+; \\1 (?:<|>)=? {2}.size\\(\\); \\1.+\\)\\{(?:.|\\s)+\\}";
