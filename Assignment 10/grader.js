@@ -145,7 +145,7 @@ function check2DArray(){
   /*let foreachFinder = "for\\({1}\\[\\] (\\w+) : {2}\\)\\{(?:.|\\s)+for\\({1} (\\w+) : \\1\\)\\{(?:.|\\s)+\\2(?:.|\\s)+\\}(?:.|\\s)+\\}"
   let forFinder = "for\\(int (\\w+) = \\d+;\\s*\\1 (?:<|>)=? {2}.length;\\s*\\1.+\\)\\{(?:.|\\s)+\\}";*/
   // Checks for the existence of a java 2D array (type[][]) in any of the method declarations
-  let decRe = /(?<type>\w+)(?:(?:(?:(?:\[\]\[\] )|(?: \[\]\[\]))(?<name>\w+))|(?: (?<oname>\w+)\[\]\[\]))(?: *= *(?:(?:new \w+\[\w+\]\[\w+\])|(?:\{.+\})))|(?:;(?:.|\s)*(?:(?:\k<name>|\k<oname>) *= *(?:(?:new \w+\[\w+\]\[\w+\])|(?:\{.+\}))))/;
+  let decRe = /(?<type>\w+)(?:(?:(?:(?:\[\]\[\] )|(?: \[\]\[\]))(?<name>\w+))|(?: (?<oname>\w+)\[\]\[\]))(?:(?: *= *(?:(?:new \w+\[\w+\]\[\w+\])|(?:\{.+\})))|(?:;(?:.|\s)*(?:(?:\k<name>|\k<oname>) *= *(?:(?:new \w+\[\w+\]\[\w+\])|(?:\{.+\})))))/;
   let useFinder = "{1}\\[\\w+\\]\\[\\w+\\]";
   let travFinder = "(?:for\\({1}\\[\\] \\w+ : {2}\\)\\{(?:.|\\s)+\\})|(?:for\\(int (\\w+) = \\d+;\\s*\\1 (?:<|>)=? {2}.length;\\s*\\1.+\\)\\{(?:.|\\s)+\\})";
   let arrayName = "";
@@ -183,6 +183,37 @@ function check2DArray(){
       }
     }
   }
+
+  for(let field of runnerArrayFields.array2d){
+    let useRegex = new RegExp(String.format(useFinder, field.name));
+    let travRegex = new RegExp(String.format(travFinder, field.type, field.name));
+    for(let name of runnerMethods){
+      if (useRegex.test(runnerBlocks[name]) && travRegex.test(runnerBlocks[name])){
+        return true;
+      }
+    }
+  }
+
+  for(let field of parentArrayFields.array2d){
+    let useRegex = new RegExp(String.format(useFinder, field.name));
+    let travRegex = new RegExp(String.format(travFinder, field.type, field.name));
+    for(let name of parentMethods){
+      if (useRegex.test(parentBlocks[name]) && travRegex.test(parentBlocks[name])){
+        return true;
+      }
+    }
+  }
+
+  for (let field of childArrayFields.array2d){
+    let useRegex = new RegExp(String.format(useFinder, field.name));
+    let travRegex = new RegExp(String.format(travFinder, field.type, field.name));
+    for(let name of childMethods){
+      if (useRegex.test(childBlocks[name]) && travRegex.test(childBlocks[name])){
+        return true;
+      }
+    }
+  }
+
   return false;
 }
 
