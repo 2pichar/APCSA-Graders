@@ -76,7 +76,7 @@ console.log(JSON.stringify(grades));
 
 function checkArray(){
   // Checks for the existence of a java array in any of the method declarations
-  let decRe = /(?<type>\w+)(?:(?:(?:(?:\[\] )|(?: \[\]))(?<name>\w+))|(?: (?<oname>\w+)\[\]))(?: *= *(?:(?:new \w+\[\w+\])|(?:\{.+\})))|(?:;(?:.|\s)*(?:(?:\k<name>|\k<oname>) *= *(?:(?:new \w+\[\w+\])|(?:\{.+\}))))/;
+  let decRe = /(?<type>\w+)(?:(?:(?:(?:\[\] )|(?: \[\]))(?<name>\w+))|(?: (?<oname>\w+)\[\]))(?:(?: *= *(?:(?:new \w+\[\w+\])|(?:\{.+\})))|(?:;(?:.|\s)*(?:(?:\k<name>|\k<oname>) *= *(?:(?:new \w+\[\w+\])|(?:\{.+\})))))/;
   let useReStr = "for\\({1} (\\w+) : {2}\\)\\{(?:.|\\s)+\\1(?:.|\\s)+\\}";
   let arrayName = "";
   // find name of java array in method declaration
@@ -102,6 +102,7 @@ function checkArray(){
   }
   for(let name of childMethods){
     let match = decRe.exec(childBlocks[name]);
+    eval("");
     if (match){
       arrayName = match.groups.name || match.groups.oname;
       let useRe = new RegExp(String.format(useReStr, match.groups.type, arrayName));
