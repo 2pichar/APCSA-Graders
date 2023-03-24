@@ -1,13 +1,13 @@
 const cp = require("node:child_process");
 const fs = require("node:fs");
 const cluster = require("node:cluster");
-const { availableParallelism } = require("node:os");
+const os = require("node:os");
 const express = require('express');
 const multiparty = require('multiparty');
 
 const app = express();
 const port = 3000;
-const numWorkers = availableParallelism() * 2;
+const numWorkers = os.cpus().length;
 
 const dateFmtOpts = {year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hour12: false};
 
@@ -190,8 +190,8 @@ if (cluster.isPrimary){
             currentGrades = msg.data;
         }
     });
-    var server = app.listen(port, () => console.log(`App listening on port ${port}!`));
 }
+var server = app.listen(port, () => console.log(`App listening on port ${port}!`));
 
 function __onExit(){
     if(cluster.isPrimary){
