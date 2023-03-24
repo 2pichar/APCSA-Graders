@@ -293,7 +293,7 @@ function getMethodBlocks(code, methodNames){
    */
   let blocks = {};
   for(let name of methodNames){
-    let startRegex = new RegExp(`public(?: static)?\\s+\\w+(?:(?:\\[\\])+|(?:<\w+>))?\\s+${name}\\s*\\(`);
+    let startRegex = new RegExp(`public(?: static)?\\s+\\w+(?:(?:\\[\\])+|(?:<\\w+>))?\\s+${name}\\s*\\(`);
     let startInd = code.search(startRegex);
     let openBracketInd = code.indexOf('{', startInd);
     if(startInd == -1){
