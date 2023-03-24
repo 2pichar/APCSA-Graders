@@ -145,7 +145,7 @@ app.post('/grade', (req, res) => {
             res.status(200).send(build_res_html(Object.values(grade_obj).map(e => e && 1 || 0), total_pts, didBonus)).end();
         } catch (e) {
             logError(e.toString());
-            res.redirect(500, '/grading-err');
+            res.redirect('/grading-err');
             return;
         }
     });
