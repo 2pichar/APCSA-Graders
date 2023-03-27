@@ -190,8 +190,8 @@ if (cluster.isPrimary){
             currentGrades = msg.data;
         }
     });
+    var server = app.listen(port, () => console.log(`App listening on port ${port}!`));
 }
-var server = app.listen(port, () => console.log(`App listening on port ${port}!`));
 
 function __onExit(){
     if(cluster.isPrimary){
