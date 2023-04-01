@@ -81,32 +81,35 @@ function checkArray(){
   let arrayName = "";
   // find name of java array in method declaration
   for(let name of runnerMethods){
-    let match = decRe.exec(runnerBlocks[name]);
+    let block = runnerBlocks[name].code;
+    let match = decRe.exec(block);
     if (match){
       arrayName = match.groups.name || match.groups.oname;
       let useRe = new RegExp(String.format(useReStr, match.groups.type, arrayName));
-      if (useRe.test(runnerBlocks[name])){
+      if (useRe.test(block)){
         return true;
       }
     }
   }
   for(let name of parentMethods){
-    let match = decRe.exec(parentBlocks[name]);
+    let block = parentBlocks[name].code;
+    let match = decRe.exec(block);
     if (match){
       arrayName = match.groups.name || match.groups.oname;
       let useRe = new RegExp(String.format(useReStr, match.groups.type, arrayName));
-      if (useRe.test(parentBlocks[name])){
+      if (useRe.test(block)){
         return true;
       }
     }
   }
   for(let name of childMethods){
+    let block = childBlocks[name].code;
     let match = decRe.exec(childBlocks[name]);
     eval("");
     if (match){
       arrayName = match.groups.name || match.groups.oname;
       let useRe = new RegExp(String.format(useReStr, match.groups.type, arrayName));
-      if (useRe.test(childBlocks[name])){
+      if (useRe.test(block)){
         return true;
       }
     }
@@ -116,7 +119,7 @@ function checkArray(){
   for(let name of runnerMethods){
     for(let field of runnerArrayFields.array){
       let useRe = new RegExp(String.format(useReStr, field.type, field.name));
-      if (useRe.test(runnerBlocks[name])){
+      if (useRe.test(runnerBlocks[name].code)){
         return true;
       }
     }
@@ -124,7 +127,7 @@ function checkArray(){
   for(let name of parentMethods){
     for(let field of parentArrayFields.array){
       let useRe = new RegExp(String.format(useReStr, field.type, field.name));
-      if (useRe.test(parentBlocks[name])){
+      if (useRe.test(parentBlocks[name].code)){
         return true;
       }
     }
@@ -132,7 +135,44 @@ function checkArray(){
   for(let name of childMethods){
     for(let field of childArrayFields.array){
       let useRe = new RegExp(String.format(useReStr, field.type, field.name));
-      if (useRe.test(childBlocks[name])){
+      if (useRe.test(childBlocks[name].code)){
+        return true;
+      }
+    }
+  }
+  
+  // check for array parameter usage
+  for (let name of runnerMethods){
+    let params = runnerMethods[name].params.array;
+    if (params.length == 0)
+      continue;
+    for (let param of params){
+      let useRe = new RegExp(String.format(useReStr, param.baseType, param.name));
+      if (useRe.test(runnerBlocks[name].code)){
+        return true;
+      }
+    }
+  }
+
+  for (let name of parentMethods){
+    let params = parentMethods[name].params.array;
+    if (params.length == 0)
+      continue;
+    for (let param of params){
+      let useRe = new RegExp(String.format(useReStr, param.baseType, param.name));
+      if (useRe.test(parentBlocks[name].code)){
+        return true;
+      }
+    }
+  }
+
+  for (let name of childMethods){
+    let params = childMethods[name].params.array;
+    if (params.length == 0)
+      continue;
+    for (let param of params){
+      let useRe = new RegExp(String.format(useReStr, param.baseType, param.name));
+      if (useRe.test(childBlocks[name].code)){
         return true;
       }
     }
@@ -151,34 +191,37 @@ function check2DArray(){
   let arrayName = "";
   // find name of java array in method declaration
   for(let name of runnerMethods){
-    let match = decRe.exec(runnerBlocks[name]);
+    let block = runnerBlocks[name].code
+    let match = decRe.exec(block);
     if (match){
       arrayName = match.groups.name || match.groups.oname;
       let useRegex = new RegExp(String.format(useFinder, match.groups.type, arrayName));
       let travRegex = new RegExp(String.format(travFinder, match.groups.type, arrayName));
-      if (useRegex.test(runnerBlocks[name]) && travRegex.test(runnerBlocks[name])){
+      if (useRegex.test(block) && travRegex.test(block)){
         return true;
       }
     }
   }
   for(let name of parentMethods){
-    let match = decRe.exec(parentBlocks[name]);
+    let block = parentBlocks[name].code;
+    let match = decRe.exec(block);
     if (match){
       arrayName = match.groups.name || match.groups.oname;
       let useRegex = new RegExp(String.format(useFinder, match.groups.type, arrayName));
       let travRegex = new RegExp(String.format(travFinder, match.groups.type, arrayName));
-      if (useRegex.test(parentBlocks[name]) && travRegex.test(parentBlocks[name])){
+      if (useRegex.test(block) && travRegex.test(block)){
         return true;
       }
     }
   }
   for(let name of childMethods){
-    let match = decRe.exec(childBlocks[name]);
+    let block = childBlocks[name].code;
+    let match = decRe.exec(block);
     if (match){
       arrayName = match.groups.name || match.groups.oname;
       let useRegex = new RegExp(String.format(useFinder, arrayName));
       let travRegex = new RegExp(String.format(travFinder, match.groups.type, arrayName));
-      if (useRegex.test(childBlocks[name]) && travRegex.test(childBlocks[name])){
+      if (useRegex.test(block) && travRegex.test(block)){
         return true;
       }
     }
@@ -188,7 +231,7 @@ function check2DArray(){
     let useRegex = new RegExp(String.format(useFinder, field.name));
     let travRegex = new RegExp(String.format(travFinder, field.type, field.name));
     for(let name of runnerMethods){
-      if (useRegex.test(runnerBlocks[name]) && travRegex.test(runnerBlocks[name])){
+      if (useRegex.test(runnerBlocks[name].code) && travRegex.test(runnerBlocks[name].code)){
         return true;
       }
     }
@@ -198,7 +241,7 @@ function check2DArray(){
     let useRegex = new RegExp(String.format(useFinder, field.name));
     let travRegex = new RegExp(String.format(travFinder, field.type, field.name));
     for(let name of parentMethods){
-      if (useRegex.test(parentBlocks[name]) && travRegex.test(parentBlocks[name])){
+      if (useRegex.test(parentBlocks[name].code) && travRegex.test(parentBlocks[name].code)){
         return true;
       }
     }
@@ -208,7 +251,47 @@ function check2DArray(){
     let useRegex = new RegExp(String.format(useFinder, field.name));
     let travRegex = new RegExp(String.format(travFinder, field.type, field.name));
     for(let name of childMethods){
-      if (useRegex.test(childBlocks[name]) && travRegex.test(childBlocks[name])){
+      if (useRegex.test(childBlocks[name].code) && travRegex.test(childBlocks[name].code)){
+        return true;
+      }
+    }
+  }
+
+  // check for 2D array parameter usage
+  for (let name of runnerMethods){
+    let params = runnerMethods[name].params.array2d;
+    if (params.length == 0)
+      continue;
+    for (let param of params){
+      let useRe = new RegExp(String.format(useFinder, param.name));
+      let travRe = new RegExp(String.format(travFinder, param.baseType, param.name));
+      if (useRe.test(runnerBlocks[name].code) && travRe.test(runnerBlocks[name].code)){
+        return true;
+      }
+    }
+  }
+
+  for (let name of parentMethods){
+    let params = parentMethods[name].params.array2d;
+    if (params.length == 0)
+      continue;
+    for (let param of params){
+      let useRe = new RegExp(String.format(useFinder, param.name));
+      let travRe = new RegExp(String.format(travFinder, param.baseType, param.name));
+      if (useRe.test(parentBlocks[name].code) && travRe.test(parentBlocks[name].code)){
+        return true;
+      }
+    }
+  }
+
+  for (let name of childMethods){
+    let params = childMethods[name].params.array2d;
+    if (params.length == 0)
+      continue;
+    for (let param of params){
+      let useRe = new RegExp(String.format(useFinder, param.name));
+      let travRe = new RegExp(String.format(travFinder, param.baseType, param.name));
+      if (useRe.test(childBlocks[name].code) && travRe.test(childBlocks[name].code)){
         return true;
       }
     }
@@ -258,31 +341,105 @@ function checkArrayList(){
       }
     }
   }
+
+  for(let field of runnerArrayFields.arrayList){
+    let useRegex = new RegExp(String.format(useFinder, field.name));
+    let travRegex = new RegExp(String.format(travFinder, field.type, field.name));
+    for(let name of runnerMethods){
+      if (useRegex.test(runnerBlocks[name].code) && travRegex.test(runnerBlocks[name].code)){
+        return true;
+      }
+    }
+  }
+
+  for(let field of parentArrayFields.arrayList){
+    let useRegex = new RegExp(String.format(useFinder, field.name));
+    let travRegex = new RegExp(String.format(travFinder, field.type, field.name));
+    for(let name of parentMethods){
+      if (useRegex.test(parentBlocks[name].code) && travRegex.test(parentBlocks[name].code)){
+        return true;
+      }
+    }
+  }
+
+  for (let field of childArrayFields.arrayList){
+    let useRegex = new RegExp(String.format(useFinder, field.name));
+    let travRegex = new RegExp(String.format(travFinder, field.type, field.name));
+    for(let name of childMethods){
+      if (useRegex.test(childBlocks[name].code) && travRegex.test(childBlocks[name].code)){
+        return true;
+      }
+    }
+  }
+
+  // check for ArrayList parameter usage
+  for (let name of runnerMethods){
+    let params = runnerMethods[name].params.arrayList;
+    if (params.length == 0)
+      continue;
+    for (let param of params){
+      let useRe = new RegExp(String.format(useFinder, param.name));
+      let travRe = new RegExp(String.format(travFinder, param.baseType, param.name));
+      if (useRe.test(runnerBlocks[name].code) && travRe.test(runnerBlocks[name].code)){
+        return true;
+      }
+    }
+  }
+
+  for (let name of parentMethods){
+    let params = parentMethods[name].params.arrayList;
+    if (params.length == 0)
+      continue;
+    for (let param of params){
+      let useRe = new RegExp(String.format(useFinder, param.name));
+      let travRe = new RegExp(String.format(travFinder, param.baseType, param.name));
+      if (useRe.test(parentBlocks[name].code) && travRe.test(parentBlocks[name].code)){
+        return true;
+      }
+    }
+  }
+
+  for (let name of childMethods){
+    let params = childMethods[name].params.arrayList;
+    if (params.length == 0)
+      continue;
+    for (let param of params){
+      let useRe = new RegExp(String.format(useFinder, param.name));
+      let travRe = new RegExp(String.format(travFinder, param.baseType, param.name));
+      if (useRe.test(childBlocks[name].code) && travRe.test(childBlocks[name].code)){
+        return true;
+      }
+    }
+  }
+
   return false;
 }
 
 function checkRecursion(){
   for(let name of runnerMethods){
-    let blockStartInd = runnerBlocks[name].indexOf('{');
+    let block = runnerBlocks[name].code;
+    let blockStartInd = block.indexOf('{');
     let re = new RegExp(`${name}\\(.*?\\)`, 'g');
     re.lastIndex = blockStartInd;
-    if (re.test(runnerBlocks[name])){
+    if (re.test(block[name])){
       return true;
     }
   }
   for(let name of parentMethods){
-    let blockStartInd = parentBlocks[name].indexOf('{');
+    let block = parentBlocks[name].code;
+    let blockStartInd = block.indexOf('{');
     let re = new RegExp(`${name}\\(.*?\\)`, 'g');
     re.lastIndex = blockStartInd;
-    if (re.test(parentBlocks[name])){
+    if (re.test(block)){
       return true;
     }
   }
   for(let name of childMethods){
-    let blockStartInd = childBlocks[name].indexOf('{');
+    let block = childBlocks[name].code;
+    let blockStartInd = code.indexOf('{');
     let re = new RegExp(`${name}\\(.*?\\)`, 'g');
     re.lastIndex = blockStartInd;
-    if (re.test(childBlocks[name])){
+    if (re.test(block)){
       return true;
     }
   }
@@ -325,15 +482,34 @@ function getMethodBlocks(code, methodNames){
    */
   let blocks = {};
   for(let name of methodNames){
-    let startRegex = new RegExp(`public(?: static)?\\s+\\w+(?:(?:\\[\\])+|(?:<\\w+>))?\\s+${name}\\s*\\(`);
-    let startInd = code.search(startRegex);
+    let startRegex = new RegExp(`(?:(?:public)|(?:private))(?: static)?\\s+\\w+(?:(?:\\[\\])+|(?:<\\w+>))?\\s+${name}\\s*\\(((?:(?:\\s*\\w|[<>[]]\\s+\\w+\\s*)+,?)*)`);
+    let match = startRegex.exec(code);
+    let startInd = match.index;
     let openBracketInd = code.indexOf('{', startInd);
     if(startInd == -1){
       // method not found
       continue;
     }
+    let obj;
+    if (match.length > 1){
+      let params = match.slice(1);
+      obj = {array: [], array2d: [], arrayList: [], other: []};
+      params.forEach(el => {
+        let type = el.split(' ')[0];
+        let name = el.split(' ')[0];
+        if (type.includes('[][]') || name.includes('[][]')){
+          obj.array2d.push({name, baseType: type.replace('[][]', '').trim()})
+        } else if(type.includes('[]') || name.includes('[][]')){
+          obj.array.push({name, baseType: type.replace('[]', '').trim()});
+        } else if (type.includes('<')){
+          obj.arrayList.push({name, type: type.replace(/ArrayList<(.+)>/g, '$1').trim()})// TODO: check & fix?
+        } else {
+          obj.other.push({name, baseType: type});
+        }
+      });
+    }
     let endInd = findMatchingBracket(code, openBracketInd);
-    blocks[name] = code.substring(startInd, endInd+1);
+    blocks[name] = {code: code.substring(startInd, endInd+1), params: obj};
   }
   return blocks;
 }
