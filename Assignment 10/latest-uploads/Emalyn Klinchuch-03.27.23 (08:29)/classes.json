@@ -1,0 +1,5 @@
+{
+    "parent": "Player",
+    "child": "Computer",
+    "runner": "Runner"
+}

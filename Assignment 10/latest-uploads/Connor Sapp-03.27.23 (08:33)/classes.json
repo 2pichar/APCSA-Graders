@@ -1,0 +1,5 @@
+{
+    "parent": "Tile",
+    "child": "Treasure",
+    "runner": "Main"
+}

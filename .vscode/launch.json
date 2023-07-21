@@ -11,9 +11,13 @@
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "program": "${workspaceFolder}/Assignment 10/grader.js",
-            "args": [],
-            "cwd": "${workspaceFolder}/Assignment 10"
+            "program": "${file}",
+            "args": [
+                "Main",
+                "Soldier",
+                "Paladin"
+            ],
+            "cwd": "${fileDirname}"
         }
     ]
 }

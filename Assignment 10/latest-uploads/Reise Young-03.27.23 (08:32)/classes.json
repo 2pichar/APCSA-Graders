@@ -1,0 +1,5 @@
+{
+    "parent": "Place",
+    "child": "TravelDestination",
+    "runner": "TravelPlanner"
+}

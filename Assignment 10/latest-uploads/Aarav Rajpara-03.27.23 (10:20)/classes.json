@@ -1,0 +1,5 @@
+{
+    "parent": "Soldier",
+    "child": "Paladin",
+    "runner": "Main"
+}

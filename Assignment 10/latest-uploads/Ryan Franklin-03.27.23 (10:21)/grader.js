@@ -65,7 +65,7 @@ let java_grades = JSON.parse(runGrader_java('grade', parentClass, childClass, ru
 grades = {...grades, ...java_grades};
 
 
-try {
+try{
   let recursive = checkRecursion();
   let arrayExists = checkArray();
   let twoDArrayExists = check2DArray();

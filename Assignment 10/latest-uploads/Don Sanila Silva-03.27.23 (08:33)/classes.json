@@ -1,0 +1,5 @@
+{
+    "parent": "Car",
+    "child": "Sedan",
+    "runner": "CarDealership"
+}

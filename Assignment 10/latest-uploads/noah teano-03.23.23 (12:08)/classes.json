@@ -1,0 +1,5 @@
+{
+    "parent": "Task",
+    "child": "Subtask",
+    "runner": "Main"
+}

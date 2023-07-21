@@ -1,0 +1,5 @@
+{
+    "parent": "Party",
+    "child": "DinnerParty",
+    "runner": "Main"
+}

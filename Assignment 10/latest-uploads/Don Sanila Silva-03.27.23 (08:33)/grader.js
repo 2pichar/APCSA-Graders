@@ -33,6 +33,8 @@ const runnerClass = args[0];
 const parentClass = args[1];
 const childClass = args[2];
 
+console.log(__dirname);
+console.log(`runnerClass: ${runnerClass}`);
 const runner_file = fs.readFileSync(`${__dirname}/assignment10/${runnerClass}.java`, 'utf-8');
 const parent_file = fs.readFileSync(`${__dirname}/assignment10/${parentClass}.java`, 'utf-8');
 const child_file = fs.readFileSync(`${__dirname}/assignment10/${childClass}.java`, 'utf-8');
@@ -65,7 +67,7 @@ let java_grades = JSON.parse(runGrader_java('grade', parentClass, childClass, ru
 grades = {...grades, ...java_grades};
 
 
-try {
+try{
   let recursive = checkRecursion();
   let arrayExists = checkArray();
   let twoDArrayExists = check2DArray();
@@ -108,6 +110,7 @@ function checkArray(){
   for(let name of childMethods){
     let block = childBlocks[name].code;
     let match = decRe.exec(childBlocks[name]);
+    eval("");
     if (match){
       arrayName = match.groups.name || match.groups.oname;
       let useRe = new RegExp(String.format(useReStr, match.groups.type, arrayName));

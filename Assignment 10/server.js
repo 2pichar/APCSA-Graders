@@ -9,8 +9,6 @@ const app = express();
 const port = 3000;
 const numWorkers = os.cpus().length;
 
-const dateFmtOpts = {year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hour12: false};
-
 let currentGrades = JSON.parse(fs.readFileSync(__dirname + '/grades.json', 'utf8'));
 const gradeResTemplate = fs.readFileSync(__dirname + '/html/grading_res.html', 'utf8');
 const gradesSummaryTemplate = fs.readFileSync(__dirname + '/html/grades_summary.html', 'utf8');
@@ -119,7 +117,7 @@ app.post('/grade', (req, res) => {
         }
         for(let file of Object.values(files)) {
             // prepend 'package assignment10;' to the top of the file
-            file.data = 'package assignment10;\n\n' + file.data;
+            //file.data = 'package assignment10;\n\n' + file.data;
             // move the file to the uploads folder
             fs.writeFileSync(folder + '/assignment10/' + file.name, file.data);
         }

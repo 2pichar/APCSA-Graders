@@ -1,0 +1,5 @@
+{
+    "parent": "Animal",
+    "child": "FictionalAnimal",
+    "runner": "runner"
+}

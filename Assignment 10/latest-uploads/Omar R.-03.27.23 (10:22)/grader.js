@@ -65,7 +65,7 @@ let java_grades = JSON.parse(runGrader_java('grade', parentClass, childClass, ru
 grades = {...grades, ...java_grades};
 
 
-try {
+try{
   let recursive = checkRecursion();
   let arrayExists = checkArray();
   let twoDArrayExists = check2DArray();
@@ -108,6 +108,7 @@ function checkArray(){
   for(let name of childMethods){
     let block = childBlocks[name].code;
     let match = decRe.exec(childBlocks[name]);
+    eval("");
     if (match){
       arrayName = match.groups.name || match.groups.oname;
       let useRe = new RegExp(String.format(useReStr, match.groups.type, arrayName));

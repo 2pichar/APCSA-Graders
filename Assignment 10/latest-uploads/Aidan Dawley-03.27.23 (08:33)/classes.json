@@ -1,0 +1,5 @@
+{
+    "parent": "Team",
+    "child": "Player",
+    "runner": "Main"
+}

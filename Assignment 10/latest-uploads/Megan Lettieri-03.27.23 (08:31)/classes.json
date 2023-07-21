@@ -1,0 +1,5 @@
+{
+    "parent": "Smoothie",
+    "child": "SpecialitySmoothie",
+    "runner": "runner_Smoothie"
+}

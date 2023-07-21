@@ -1,0 +1,5 @@
+{
+    "parent": "Investment",
+    "child": "Stock",
+    "runner": "Main"
+}

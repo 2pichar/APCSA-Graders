@@ -1,0 +1,5 @@
+{
+    "parent": "Employee",
+    "child": "BoardMember",
+    "runner": "Main"
+}

@@ -1,0 +1,5 @@
+{
+    "parent": "Character",
+    "child": "Jedi",
+    "runner": "runner_StarWars"
+}

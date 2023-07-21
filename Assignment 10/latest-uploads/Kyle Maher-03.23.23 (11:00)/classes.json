@@ -1,0 +1,5 @@
+{
+    "parent": "MyClass",
+    "child": "MySubclass",
+    "runner": "Runner"
+}
